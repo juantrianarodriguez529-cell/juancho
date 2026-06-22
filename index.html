@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Universidades en Colombia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #C9A84C;
+      --dark: #0D1117;
+      --deep: #161B22;
+      --card: #1C2128;
+      --border: #30363D;
+      --text: #E6EDF3;
+      --muted: #8B949E;
+      --red: #CF222E;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--dark);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: rgba(13,17,23,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      transition: all 0.3s;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 2rem 4rem;
+      background: radial-gradient(ellipse at top, #1a2035 0%, var(--dark) 70%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(201,168,76,0.3);
+      padding: 0.35rem 1rem;
+      border-radius: 999px;
+      margin-bottom: 2rem;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 7vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 span { color: var(--gold); }
+
+    .hero p {
+      max-width: 620px;
+      margin: 0 auto 2.5rem;
+      color: var(--muted);
+      font-size: 1.1rem;
+      font-weight: 300;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--gold);
+      color: var(--dark);
+      padding: 0.85rem 2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .hero-cta:hover { opacity: 0.9; transform: translateY(-2px); }
+
+    .hero-flag {
+      display: flex;
+      gap: 0;
+      width: 48px;
+      height: 8px;
+      margin: 0 auto 1.5rem;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .flag-yellow { flex: 2; background: #FCD116; }
+    .flag-blue   { flex: 1; background: #003087; }
+    .flag-red    { flex: 1; background: #CE1126; }
+
+    /* STATS */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat-item {
+      background: var(--deep);
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--gold);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    /* SECTIONS */
+    .section {
+      padding: 6rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 0.75rem;
+    }
+
+    .section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .section-intro {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 620px;
+      margin-bottom: 3rem;
+    }
+
+    .divider {
+      width: 48px;
+      height: 3px;
+      background: var(--gold);
+      margin: 1rem 0 22rem;
+      border-radius: 2px;
+    }
+
+    /* CARDS */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: border-color 0.2s, transform 0.2s;
+      cursor: default;
+    }
+
+    .card:hover {
+      border-color: var(--gold);
+      transform: translateY(-4px);
+    }
+
+    .card-icon {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    /* SPLIT SECTION */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .split-visual {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .bar-item { }
+
+    .bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .bar-label strong { color: var(--text); }
+
+    .bar-track {
+      height: 8px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), #e8c56a);
+      border-radius: 999px;
+      width: 0;
+      transition: width 1.2s ease;
+    }
+
+    /* UNIVERSITIES */
+    .uni-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .uni-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      transition: border-color 0.2s;
+    }
+
+    .uni-card:hover { border-color: rgba(201,168,76,0.5); }
+
+    .uni-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+
+    .badge-public { background: rgba(0,48,135,0.25); color: #6b9fff; border: 1px solid rgba(0,48,135,0.4); }
+    .badge-private { background: rgba(201,168,76,0.15); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+
+    .uni-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .uni-card p {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    /* QUOTE */
+    .quote-section {
+      background: var(--deep);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 6rem 2rem;
+      text-align: center;
+    }
+
+    .quote-section blockquote {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      font-style: italic;
+      max-width: 760px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.4;
+    }
+
+    .quote-section cite {
+      color: var(--gold);
+      font-size: 0.9rem;
+      font-style: normal;
+    }
+
+    /* CHALLENGES */
+    .challenge-list {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .challenge-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: 8px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .challenge-item:hover { background: #222a33; }
+
+    .challenge-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: rgba(201,168,76,0.3);
+      line-height: 1;
+      min-width: 2.5rem;
+    }
+
+    .challenge-item h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .challenge-item p {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    /* TIMELINE */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 2rem;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2.4rem;
+      top: 0.4rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 2px solid var(--dark);
+    }
+
+    .timeline-year {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.25rem;
+    }
+
+    .timeline-item h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .timeline-item p {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--deep);
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    footer .flag {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      width: 60px;
+      height: 10px;
+      margin: 0 auto 1.5rem;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    footer p {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    footer strong { color: var(--gold); }
+
+    /* SCROLL ANIMATION */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%; left: 0; right: 0;
+        background: var(--deep);
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid var(--border);
+        gap: 1rem;
+      }
+      .hamburger { display: flex; }
+      .split { grid-template-columns: 1fr; gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">UniColombia</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#importancia">Importancia</a></li>
+      <li><a href="#impacto">Impacto</a></li>
+      <li><a href="#universidades">Universidades</a></li>
+      <li><a href="#historia">Historia</a></li>
+      <li><a href="#retos">Retos</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <div class="hero-flag">
+        <div class="flag-yellow"></div>
+        <div class="flag-blue"></div>
+        <div class="flag-red"></div>
+      </div>
+      <div class="hero-tag">Colombia · Educación Superior</div>
+      <h1>El Futuro de Colombia<br/>nace en sus <span>Universidades</span></h1>
+      <p>La educación superior es el motor que impulsa el desarrollo económico, social y cultural de nuestra nación. Conoce por qué importa.</p>
+      <a href="#importancia" class="hero-cta">Explorar ↓</a>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-item reveal">
+      <span class="stat-number" data-target="374">0</span>
+      <span class="stat-label">Instituciones de Educación Superior</span>
+    </div>
+    <div class="stat-item reveal">
+      <span class="stat-number" data-target="2.4" data-decimal>0</span>
+      <span class="stat-label">Millones de estudiantes matriculados</span>
+    </div>
+    <div class="stat-item reveal">
+      <span class="stat-number" data-target="57" data-suffix="%">0</span>
+      <span class="stat-label">Cobertura de educación superior (2023)</span>
+    </div>
+    <div class="stat-item reveal">
+      <span class="stat-number" data-target="32">0</span>
+      <span class="stat-label">Universidades en rankings latinoamericanos</span>
+    </div>
+  </div>
+
+  <!-- IMPORTANCIA -->
+  <section class="section" id="importancia">
+    <div class="reveal">
+      <span class="section-tag">¿Por qué importa?</span>
+      <h2>Pilares del Desarrollo Nacional</h2>
+      <div class="divider"></div>
+      <p class="section-intro">Las universidades colombianas no son solo centros de estudio: son instituciones que transforman vidas, comunidades y regiones enteras.</p>
+    </div>
+    <div class="cards">
+      <div class="card reveal">
+        <span class="card-icon">🎓</span>
+        <h3>Formación Profesional</h3>
+        <p>Cada año, miles de colombianos acceden a programas de pregrado y posgrado que les permiten ejercer profesiones esenciales para el país: médicos, ingenieros, maestros, abogados y más.</p>
+      </div>
+      <div class="card reveal">
+        <span class="card-icon">🔬</span>
+        <h3>Investigación e Innovación</h3>
+        <p>Las universidades colombianas generan conocimiento científico aplicado a biodiversidad, agroindustria, salud tropical y tecnología, posicionando al país en la agenda científica global.</p>
+      </div>
+      <div class="card reveal">
+        <span class="card-icon">🏙️</span>
+        <h3>Desarrollo Regional</h3>
+        <p>Universidades en ciudades intermedias como Manizales, Bucaramanga o Pasto dinamizan las economías locales y evitan la concentración del talento humano en las grandes urbes.</p>
+      </div>
+      <div class="card reveal">
+        <span class="card-icon">⚖️</span>
+        <h3>Movilidad Social</h3>
+        <p>La educación superior sigue siendo uno de los mecanismos más efectivos para que familias de bajos ingresos accedan a mejores condiciones de vida de manera sostenida.</p>
+      </div>
+      <div class="card reveal">
+        <span class="card-icon">🌍</span>
+        <h3>Ciudadanía Crítica</h3>
+        <p>Las universidades forman personas capaces de analizar, debatir y transformar la realidad política y social del país, fortaleciendo la democracia participativa.</p>
+      </div>
+      <div class="card reveal">
+        <span class="card-icon">🤝</span>
+        <h3>Cooperación Internacional</h3>
+        <p>Colombia ha multiplicado sus alianzas con universidades de Europa, Asia y América Latina, abriendo puertas a proyectos conjuntos e intercambios estudiantiles.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <div class="quote-section">
+    <blockquote class="reveal">
+      "La educación es el arma más poderosa que puedes usar para cambiar el mundo, y en Colombia, las universidades son esa arma en manos del pueblo."
+    </blockquote>
+    <cite class="reveal">— Adaptado de Nelson Mandela · Reflexión sobre la educación pública colombiana</cite>
+  </div>
+
+  <!-- IMPACTO -->
+  <section class="section" id="impacto">
+    <div class="split">
+      <div class="reveal">
+        <span class="section-tag">Datos reales</span>
+        <h2>Impacto Medible en la Sociedad</h2>
+        <div class="divider"></div>
+        <p class="section-intro">Estos indicadores muestran cómo la educación universitaria se traduce en progreso tangible para Colombia.</p>
+      </div>
+      <div class="split-visual reveal" id="barChart">
+        <div class="bar-item">
+          <div class="bar-label"><strong>Mayor ingreso salarial</strong><span>+78%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="78"></div></div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-label"><strong>Reducción de pobreza extrema</strong><span>+65%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="65"></div></div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-label"><strong>Empleabilidad formal</strong><span>+82%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="82"></div></div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-label"><strong>Publicaciones científicas (10 años)</strong><span>+91%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="91"></div></div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-label"><strong>Startups fundadas por egresados</strong><span>+54%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="54"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- UNIVERSIDADES -->
+  <section style="background: var(--deep); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="section" id="universidades">
+      <div class="reveal">
+        <span class="section-tag">Instituciones destacadas</span>
+        <h2>Universidades que Mueven al País</h2>
+        <div class="divider"></div>
+        <p class="section-intro">Estas instituciones lideran la formación académica, la investigación y la proyección social en todo el territorio nacional.</p>
+      </div>
+      <div class="uni-grid">
+        <div class="uni-card reveal">
+          <span class="uni-badge badge-public">Pública</span>
+          <h3>Universidad Nacional de Colombia</h3>
+          <p>La más grande del país. Sede principal en Bogotá, con presencia en 9 ciudades. Referente en investigación científica y formación de élite académica.</p>
+        </div>
+        <div class="uni-card reveal">
+          <span class="uni-badge badge-private">Privada</span>
+          <h3>Universidad de los Andes</h3>
+          <p>Reconocida en múltiples rankings latinoamericanos. Fuerte en ingeniería, economía, derecho y humanidades. Líder en proyectos de innovación y emprendimiento.</p>
+        </div>
+        <div class="uni-card reveal">
+          <span class="uni-badge badge-public">Pública</span>
+          <h3>Universidad de Antioquia</h3>
+          <p>Institución centenaria con fuerte arraigo en Medellín y Antioquia. Destaca en ciencias de la salud, ciencias exactas y ciencias sociales.</p>
+        </div>
+        <div class="uni-card reveal">
+          <span class="uni-badge badge-private">Privada</span>
+          <h3>Pontificia Universidad Javeriana</h3>
+          <p>Con sedes en Bogotá y Cali, es referente en humanidades, derecho, ingeniería y salud. Proyección social fuertemente ligada a comunidades vulnerables.</p>
+        </div>
+        <div class="uni-card reveal">
+          <span class="uni-badge badge-public">Pública</span>
+          <h3>Universidad del Valle</h3>
+          <p>Principal institución de educación superior del suroccidente colombiano. Fuerte en ciencias básicas, ingeniería y salud pública.</p>
+        </div>
+        <div class="uni-card reveal">
+          <span class="uni-badge badge-private">Privada</span>
+          <h3>Universidad EAFIT</h3>
+          <p>Medellín. Lider en negocios, ingeniería y humanidades. Profundamente ligada al ecosistema empresarial e innovador del Triángulo del Café y Antioquia.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HISTORIA -->
+  <section class="section" id="historia">
+    <div class="split">
+      <div class="reveal">
+        <span class="section-tag">Línea de tiempo</span>
+        <h2>Una Historia de Saber</h2>
+        <div class="divider"></div>
+        <p class="section-intro">La educación superior en Colombia tiene raíces coloniales y ha evolucionado a lo largo de cuatro siglos.</p>
+      </div>
+      <div class="timeline reveal">
+        <div class="timeline-item">
+          <div class="timeline-year">1653</div>
+          <h4>Primera universidad del territorio</h4>
+          <p>Fundación del Colegio Mayor de Nuestra Señora del Rosario en Bogotá, una de las más antiguas de América Latina.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">1867</div>
+          <h4>Nace la Universidad Nacional</h4>
+          <p>El presidente Santos Acosta crea la Universidad Nacional de Colombia como proyecto de Estado para formar profesionales al servicio de la nación.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">1954</div>
+          <h4>Reconocimiento de la autonomía universitaria</h4>
+          <p>Se consolida el principio de autonomía académica, permitiendo a las universidades definir sus propios planes de estudio e investigaciones.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">1992</div>
+          <h4>Ley 30 de Educación Superior</h4>
+          <p>Marco normativo vigente que organiza y regula el sistema de educación superior en Colombia, garantizando calidad y acceso.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2010–hoy</div>
+          <h4>Era digital y cobertura</h4>
+          <p>Expansión de programas virtuales, becas como Ser Pilo Paga y Matrícula Cero amplían el acceso a poblaciones históricamente excluidas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RETOS -->
+  <section style="background: var(--deep); border-top: 1px solid var(--border);">
+    <div class="section" id="retos">
+      <div class="reveal">
+        <span class="section-tag">Mirando al futuro</span>
+        <h2>Retos Pendientes</h2>
+        <div class="divider"></div>
+        <p class="section-intro">A pesar de los avances, Colombia enfrenta desafíos estructurales en su sistema universitario que exigen atención urgente.</p>
+      </div>
+      <div class="challenge-list">
+        <div class="challenge-item reveal">
+          <span class="challenge-number">01</span>
+          <div>
+            <h4>Financiación insuficiente de las universidades públicas</h4>
+            <p>El presupuesto asignado a instituciones como la Universidad Nacional sigue siendo menor al que demanda su crecimiento y sus compromisos de investigación y docencia.</p>
+          </div>
+        </div>
+        <div class="challenge-item reveal">
+          <span class="challenge-number">02</span>
+          <div>
+            <h4>Deserción estudiantil</h4>
+            <p>Aproximadamente el 46% de los estudiantes que ingresan a la educación superior no terminan su carrera, principalmente por razones económicas y académicas.</p>
+          </div>
+        </div>
+        <div class="challenge-item reveal">
+          <span class="challenge-number">03</span>
+          <div>
+            <h4>Brecha campo-ciudad</h4>
+            <p>Los jóvenes rurales tienen acceso muy limitado a la educación superior de calidad. La oferta virtual aún no cubre la brecha de conectividad en zonas apartadas.</p>
+          </div>
+        </div>
+        <div class="challenge-item reveal">
+          <span class="challenge-number">04</span>
+          <div>
+            <h4>Pertinencia del currículo</h4>
+            <p>Los programas académicos deben adaptarse más rápidamente a las necesidades del mercado laboral del siglo XXI: inteligencia artificial, transición energética y economía verde.</p>
+          </div>
+        </div>
+        <div class="challenge-item reveal">
+          <span class="challenge-number">05</span>
+          <div>
+            <h4>Calidad desigual entre regiones</h4>
+            <p>Existe una marcada diferencia en calidad entre universidades de grandes ciudades y las de departamentos periféricos, lo que perpetúa brechas de oportunidad.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="flag">
+      <div class="flag-yellow"></div>
+      <div class="flag-blue"></div>
+      <div class="flag-red"></div>
+    </div>
+    <p>Página informativa sobre la <strong>educación superior en Colombia</strong>. Información con fines educativos.</p>
+    <p style="margin-top:0.5rem; font-size:0.78rem;">Datos de referencia: MEN · SNIES · QS Latin America Rankings · DANE 2023</p>
+  </footer>
+
+  <script>
+    // Hamburger menu
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Counter animation
+    function animateCounter(el) {
+      const target = parseFloat(el.dataset.target);
+      const isDecimal = el.hasAttribute('data-decimal');
+      const suffix = el.dataset.suffix || '';
+      const duration = 1800;
+      const start = performance.now();
+      function update(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = target * eased;
+        el.textContent = isDecimal ? value.toFixed(1) + suffix : Math.floor(value) + suffix;
+        if (progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    }
+
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target);
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.stat-number').forEach(el => counterObserver.observe(el));
+
+    // Bar chart animation
+    const barObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.bar-fill').forEach(bar => {
+            bar.style.width = bar.dataset.width + '%';
+          });
+          barObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    const barChart = document.getElementById('barChart');
+    if (barChart) barObserver.observe(barChart);
+
+    // Smooth scroll for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        navLinks.classList.remove('open');
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>
